@@ -1,0 +1,431 @@
+SQL> SELECT *
+  2  FROM EMP
+  3  ;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10               
+
+14 rows selected.
+
+SQL> SELECT ROWID,ROWNUM
+  2  FROM EMP;
+
+ROWID                  ROWNUM                                                                       
+------------------ ----------                                                                       
+AAAMfPAAEAAAAAgAAA          1                                                                       
+AAAMfPAAEAAAAAgAAB          2                                                                       
+AAAMfPAAEAAAAAgAAC          3                                                                       
+AAAMfPAAEAAAAAgAAD          4                                                                       
+AAAMfPAAEAAAAAgAAE          5                                                                       
+AAAMfPAAEAAAAAgAAF          6                                                                       
+AAAMfPAAEAAAAAgAAG          7                                                                       
+AAAMfPAAEAAAAAgAAH          8                                                                       
+AAAMfPAAEAAAAAgAAI          9                                                                       
+AAAMfPAAEAAAAAgAAJ         10                                                                       
+AAAMfPAAEAAAAAgAAK         11                                                                       
+AAAMfPAAEAAAAAgAAL         12                                                                       
+AAAMfPAAEAAAAAgAAM         13                                                                       
+AAAMfPAAEAAAAAgAAN         14                                                                       
+
+14 rows selected.
+
+SQL> SELECT * FROM EMP
+  2  WHERE ROWNUM<=5
+  3  ;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+
+SQL> SELECT * FROM EMP
+  2  WHERE ROWNUM=1;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * FROM EMP
+  2* WHERE ROWNUM=2
+SQL> /
+
+no rows selected
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * 
+  2  FROM (SELECT EMP.*,ROWNUM R1
+  3  FROM EMP)
+  4* WHERE ROWNUM=2
+SQL> /
+
+no rows selected
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * 
+  2  FROM (SELECT EMP.*,ROWNUM R1
+  3  FROM EMP)
+  4* WHERE R1=2
+SQL> /
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO         R1    
+---------- ---------- --------- ---------- --------- ---------- ---------- ---------- ----------    
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30          2    
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * 
+  2  FROM (SELECT EMP.*,ROWNUM R1
+  3  FROM EMP)
+  4* WHERE R1 IN (2,4,6,8)
+SQL> /
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO         R1    
+---------- ---------- --------- ---------- --------- ---------- ---------- ---------- ----------    
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30          2    
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20          4    
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30          6    
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20          8    
+
+SQL> SELECT E.ENAME,M.ENAME
+  2  FROM EMP E JOIN EMP M
+  3  ON E.MGR=M.EMPNO
+  4  WHERE ROWNUM<=3;
+
+ENAME      ENAME                                                                                    
+---------- ----------                                                                               
+SMITH      FORD                                                                                     
+ALLEN      BLAKE                                                                                    
+WARD       BLAKE                                                                                    
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM (SELECT E.ENAME,M.ENAME
+  3  FROM EMP E JOIN EMP M
+  4  ON E.MGR=M.EMPNO
+  5  ORDER BY M.SAL DESC)
+  6* WHERE ROWNUM<=3
+SQL> /
+SELECT *
+       *
+ERROR at line 1:
+ORA-00918: column ambiguously defined 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * FROM (SELECT ROWNM R1,EMP.*
+  2  FROM (SELECT E.ENAME,M.ENAME
+  3  FROM EMP E JOIN EMP M
+  4  ON E.MGR=M.EMPNO
+  5  ORDER BY M.SAL DESC))
+  6* WHERE ROWNUM<=3
+SQL> /
+SELECT * FROM (SELECT ROWNM R1,EMP.*
+                                   *
+ERROR at line 1:
+ORA-00904: "EMP": invalid identifier 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * 
+  2  FROM(SELECT E.ENAME,M.ENAME
+  3       FROM EMP E JOIN EMP M
+  4       ON E.MGR=M.EMPNO
+  5       ORDER BY M.SAL DESC)
+  6* WHERE ROWNUM<=3
+SQL> /
+SELECT * 
+       *
+ERROR at line 1:
+ORA-00918: column ambiguously defined 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * 
+  2  FROM(SELECT DNAME
+  3       FROM EMP E INNER JOIN DEPT D
+  4       ON E.DEPTNO=D.DEPTNO
+  5       GROUP BY DNAME
+  6       ORDER BY COUNT(*) DESC)
+  7* WHERE ROWNUM<=2
+SQL> /
+
+DNAME                                                                                               
+--------------                                                                                      
+SALES                                                                                               
+RESEARCH                                                                                            
+
+SQL> SELECT *
+  2  FROM (SELECT ROWNUM R1, EMP.*
+  3        FROM EMP)
+  4  
+SQL> (SELECT COUNT(*)-3 FROM EMP);
+
+COUNT(*)-3                                                                                          
+----------                                                                                          
+        11                                                                                          
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1* (SELECT COUNT(*)-3 FROM EMP)
+SQL> 
+SQL> SELECT *
+  2  FROM (SELECT ROWNUM R1, EMP.*
+  3        FROM EMP)
+  4  WHERE R1>(SELECT COUNT(*)-3 FROM EMP);
+
+        R1      EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO    
+---------- ---------- ---------- --------- ---------- --------- ---------- ---------- ----------    
+        12       7900 JAMES      CLERK           7698 03-DEC-81        950                    30    
+        13       7902 FORD       ANALYST         7566 03-DEC-81       3000                    20    
+        14       7934 MILLER     CLERK           7782 23-JAN-82       1300                    10    
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM (SELECT ROWNUM R1, EMP.*
+  3        FROM EMP)
+  4* WHERE R1>(SELECT COUNT(*)-3 FROM EMP)
+SQL> 
+SQL> SELECT * FROM (SELECT ROWNM R1,EMP.*
+  2  FROM (SELECT E.ENAME,M.ENAME
+  3  FROM EMP E JOIN EMP M
+  4  ON E.MGR=M.EMPNO
+  5  ORDER BY M.SAL DESC))
+  6  WHERE ROWNUM<=3
+  7  ED
+  8  ;
+ED
+*
+ERROR at line 7:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * 
+  2  FROM(SELECT E.ENAME,M.ENAME
+  3       FROM EMP E JOIN EMP M
+  4       ON E.MGR=M.EMPNO
+  5       ORDER BY M.SAL DESC)
+  6* WHERE ROWNUM<=3
+  7  /
+SELECT * 
+       *
+ERROR at line 1:
+ORA-00918: column ambiguously defined 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT E.ENAME,M.ENAME
+  2  FROM(SELECT E.ENAME,M.ENAME
+  3       FROM EMP E JOIN EMP M
+  4       ON E.MGR=M.EMPNO
+  5       ORDER BY M.SAL DESC)
+  6* WHERE ROWNUM<=3
+SQL> /
+SELECT E.ENAME,M.ENAME
+               *
+ERROR at line 1:
+ORA-00904: "M"."ENAME": invalid identifier 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM(SELECT E.ENAME,M.ENAME,ROWNUM R1
+  3       FROM EMP E JOIN EMP M
+  4       ON E.MGR=M.EMPNO
+  5       ORDER BY M.SAL DESC)
+  6* WHERE ROWNUM<=3
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM(SELECT E.ENAME,M.ENAME,ROWNUM R1
+  3       FROM EMP E JOIN EMP M
+  4       ON E.MGR=M.EMPNO
+  5       ORDER BY M.SAL DESC)
+  6* WHERE R1<=3
+SQL> /
+SELECT *
+       *
+ERROR at line 1:
+ORA-00918: column ambiguously defined 
+
+
+SQL> SELECT *
+  2  FROM (SELECT DISTINCT SAL
+  3        FROM EMP)
+  4  ED
+  5  ;
+
+       SAL                                                                                          
+----------                                                                                          
+      2450                                                                                          
+      5000                                                                                          
+      1300                                                                                          
+      1250                                                                                          
+      2850                                                                                          
+      2975                                                                                          
+      1100                                                                                          
+      3000                                                                                          
+       800                                                                                          
+      1600                                                                                          
+      1500                                                                                          
+       950                                                                                          
+
+12 rows selected.
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM (SELECT DISTINCT SAL
+  3        FROM EMP
+  4        ORDER BY SAL)
+  5* WHERE ROWNUM<=3
+SQL> /
+
+       SAL                                                                                          
+----------                                                                                          
+       800                                                                                          
+       950                                                                                          
+      1100                                                                                          
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM(SELECT ROWNUM R1,SAL
+  3       FROM (SELECT DISTINCT SAL
+  4             FROM EMP
+  5             ORDER BY SAL))
+  6* WHERE ROWNUM=3
+SQL> /
+
+no rows selected
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM(SELECT ROWNUM R1,SAL
+  3       FROM (SELECT DISTINCT SAL
+  4             FROM EMP
+  5             ORDER BY SAL))
+  6* WHERE R1=3
+SQL> /
+
+        R1        SAL                                                                               
+---------- ----------                                                                               
+         3       1100                                                                               
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM(SELECT ROWNUM R1,SAL
+  3       FROM (SELECT DISTINCT SAL
+  4             FROM EMP
+  5             ORDER BY SAL))
+  6* WHERE R1 IN (3,5,7,9)
+SQL> /
+
+        R1        SAL                                                                               
+---------- ----------                                                                               
+         3       1100                                                                               
+         5       1300                                                                               
+         7       1600                                                                               
+         9       2850                                                                               
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM(SELECT ROWNUM R1,SAL
+  3       FROM (SELECT DISTINCT SAL
+  4             FROM EMP
+  5             ORDER BY SAL))
+  6* WHERE R1=(SELECT COUNT(*)/2 FROM EMP)
+SQL> /
+
+        R1        SAL                                                                               
+---------- ----------                                                                               
+         7       1600                                                                               
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM(SELECT ROWNUM R1,SAL
+  3       FROM (SELECT DISTINCT SAL
+  4             FROM EMP
+  5             ORDER BY SAL))
+  6* WHERE R1 BETWEEN (SELECT COUNT(*)/2 FROM EMP) AND (SELECT (COUNT(*)/2)+2 FROM EMP)
+SQL> /
+
+        R1        SAL                                                                               
+---------- ----------                                                                               
+         7       1600                                                                               
+         8       2450                                                                               
+         9       2850                                                                               
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM(SELECT ROWNUM R1,SAL
+  3       FROM (SELECT DISTINCT SAL
+  4             FROM EMP
+  5             ORDER BY SAL))
+  6* WHERE R1 BETWEEN (SELECT (COUNT(*)/2)-2 FROM EMP) AND (SELECT (COUNT(*)/2)+2 FROM EMP)
+SQL> /
+
+        R1        SAL                                                                               
+---------- ----------                                                                               
+         5       1300                                                                               
+         6       1500                                                                               
+         7       1600                                                                               
+         8       2450                                                                               
+         9       2850                                                                               
+
+SQL> SPOOL OFF;

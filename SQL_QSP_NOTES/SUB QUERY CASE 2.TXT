@@ -1,0 +1,384 @@
+SQL> /*1] WAQTD DEPARTMENT NAME OF EMP WHOSE DESIGNATION IS
+SQL> PRESIDENT. */
+SQL> SELECT DNAME
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM EMP
+  5                   WHERE JOB = 'PRESIDENT');
+SELECT DNAME
+       *
+ERROR at line 1:
+ORA-00904: "DNAME": invalid identifier 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME
+  2  FROM DEPT
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM EMP
+  5*                  WHERE JOB = 'PRESIDENT')
+SQL> /
+
+DNAME                                                                                               
+--------------                                                                                      
+ACCOUNTING                                                                                          
+
+SQL> /*2] WAQTD EMPLOYEE NAME OF EMP WORKING IN ACCOUNTING
+SQL> DEPARTMENT.*/
+SQL> SELECT ENAME
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5                   WHERE DNAME = 'ACCOUNTING');
+
+ENAME                                                                                               
+----------                                                                                          
+CLARK                                                                                               
+KING                                                                                                
+MILLER                                                                                              
+
+SQL> /*3] WAQTD EMPLOYEE NAME & SALARY OF EMP'S WHO ARE WORKING IN
+SQL> CHICAGO. */
+SQL> SELECT ENAME,SAL
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5                   WHERE LOC='CHICAGO');
+
+ENAME             SAL                                                                               
+---------- ----------                                                                               
+ALLEN            1600                                                                               
+WARD             1250                                                                               
+MARTIN           1250                                                                               
+BLAKE            2850                                                                               
+TURNER           1500                                                                               
+JAMES             950                                                                               
+
+6 rows selected.
+
+SQL> /*4] WAQTD DETAILS OF AN EMP WHOSE WORKING IN SALES DEPARTMENT.*/
+SQL> SELECT *
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5                   DNAME = 'SALES');
+                 DNAME = 'SALES')
+                       *
+ERROR at line 5:
+ORA-00907: missing right parenthesis 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5*                  WHERE DNAME = 'SALES')
+SQL> /
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+
+6 rows selected.
+
+SQL> /*5] WAQTD DETAILS OF EMP ALONG WITH ANNULAL SAL IF EMP'S ARE
+SQL> WORKING IN NEW YORK.*/
+SQL> SELECT *
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5                   WHERE LOC='NEW YORK');
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10               
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10               
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10               
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * AS ANNUAL_SAL
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5*                  WHERE LOC='NEW YORK')
+SQL> /
+SELECT * AS ANNUAL_SAL
+         *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT *,SAL*12 AS ANNUAL_SAL
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5*                  WHERE LOC='NEW YORK')
+SQL> /
+SELECT *,SAL*12 AS ANNUAL_SAL
+        *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT EMP.*,SAL*12 AS ANNUAL_SAL
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5*                  WHERE LOC='NEW YORK')
+SQL> /
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO ANNUAL_SAL    
+---------- ---------- --------- ---------- --------- ---------- ---------- ---------- ----------    
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10      29400    
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10      60000    
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10      15600    
+
+SQL> /*6] WAQTD EMPLOYEE NAME OF EMP WORKING IN OPERATIONS
+SQL> DEPARTMENT. */
+SQL> SELECT ENAME
+  2  FROM EMP
+  3  WHERE DDEPTNO IN (SELECT DEPTNO
+  4                    FROM DEPT
+  5                    WHERE DNAME='OPERATIONS');
+WHERE DDEPTNO IN (SELECT DEPTNO
+      *
+ERROR at line 3:
+ORA-00904: "DDEPTNO": invalid identifier 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                    FROM DEPT
+  5*                   WHERE DNAME='OPERATIONS')
+SQL> /
+
+no rows selected
+
+SQL> /*7] WAQTD NAME OF EMP EARNING MORE THAN SCOTT IN ACCOUNTING
+SQL> DEPARTMENT.*/
+SQL> SELECT ENAME
+  2  FROM EMP
+  3  WHERE SAL > (SELECT SAL
+  4               FROM EMP
+  5               WHERE ENAME='SCOTT') AND
+  6        DEPTNO IN (SELECT DEPTNO
+  7                   FROM DEPT
+  8                   WHERE DNAME='ACCOUNTING');
+
+ENAME                                                                                               
+----------                                                                                          
+KING                                                                                                
+
+SQL> /*8] WAQTD DETAILS OF EMP WORKING AS MANAGER IN CHICAGO.*/
+SQL> SELECT *
+  2  FROM EMP
+  3  WHERE JOB='MANAGER' AND
+  4        DEPTNO IN (SELECT DEPTNO
+  5                   FROM DEPT
+  6                   WHERE LOC='CHICAGO');
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+
+SQL> /*9] WAQTD NAME & SALARY OF EMP'S EARNING MORE THAN KING IN
+SQL> ACCOUNTING DEPARTMENT. */
+SQL> SELECT ENAME,SAL
+  2  FROM EMP
+  3  WHERE SAL > (SELECT SAL
+  4               FROM EMP
+  5               WHERE ENAME='KING') AND
+  6        DEPTNO IN (SELECT DEPTNO
+  7                   FROM EMP
+  8                   WHERE DNAME='ACCOUNTING');
+                 WHERE DNAME='ACCOUNTING')
+                       *
+ERROR at line 8:
+ORA-00904: "DNAME": invalid identifier 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,SAL
+  2  FROM EMP
+  3  WHERE SAL > (SELECT SAL
+  4               FROM EMP
+  5               WHERE ENAME='KING') AND
+  6        DEPTNO IN (SELECT DEPTNO
+  7                   FROM DEPT
+  8*                  WHERE DNAME='ACCOUNTING')
+SQL> /
+
+no rows selected
+
+SQL> /*10] WAQTD DETAILS OF EMP WHO IS WORKING AS SALESMAN IN SALES
+SQL> DEPARTMENT. */
+SQL> SELECT * FROM EMP
+  2  WHERE JOB = 'SALESMAN
+  3   AND  DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5                   DNAME='SALES');
+ERROR:
+ORA-01756: quoted string not properly terminated 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * FROM EMP
+  2  WHERE JOB = 'SALESMAN' AND
+  3        DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5*                  DNAME='SALES')
+SQL> /
+                 DNAME='SALES')
+                      *
+ERROR at line 5:
+ORA-00907: missing right parenthesis 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT * FROM EMP
+  2  WHERE JOB = 'SALESMAN' AND
+  3        DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5*                  WHERE DNAME='SALES')
+SQL> /
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+
+SQL> /*11] WAQTD NAME, SAL, JOB, HIREDATE OF EMP'S WORKING IN OPERATION
+SQL> DEPARTMENT & HIRED BEFORE KING.*/
+SQL> SELECT ENAME,SAL,JOB,HIREDATE
+  2  FROM EMP
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5                   WHERE DNAME='OPERATION') AND
+  6        HIREDATE < (SELECT HIREDATE
+  7                    FROM EMP
+  8                    WHERE ENAME='KING');
+
+no rows selected
+
+SQL> /*12] WAQTD ALL THE EMP'S WHOSE DEPARTMENT NAME ENDING WITH 'S'. */
+SQL> SELECT ENAME FROM EMP
+  2  WHERE DEPTNO IN (SELECT DEPTNO FROM EMP
+  3                   WHERE DNAME LIKE '%S');
+                 WHERE DNAME LIKE '%S')
+                       *
+ERROR at line 3:
+ORA-00904: "DNAME": invalid identifier 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME FROM EMP
+  2  WHERE DEPTNO IN (SELECT DEPTNO FROM DEPT
+  3*                  WHERE DNAME LIKE '%S')
+SQL> /
+
+ENAME                                                                                               
+----------                                                                                          
+ALLEN                                                                                               
+WARD                                                                                                
+MARTIN                                                                                              
+BLAKE                                                                                               
+TURNER                                                                                              
+JAMES                                                                                               
+
+6 rows selected.
+
+SQL> /*13] WAQTD DEPARTMENT NAME OF EMP'S WHOSE SAL IS 800. */
+SQL> SELECT DNAME FROM DEPT
+  2  WHERE DEPTNO IN (SELECT DEPTNO FROM EMP
+  3                   WHERE SAL=800);
+
+DNAME                                                                                               
+--------------                                                                                      
+RESEARCH                                                                                            
+
+SQL> /*14] WAQTD DNAME & LOC OF EMP'S WHOSE NAME HAS CHARACTER 'A' IN
+SQL> IT.*/
+SQL> SELECT DNAME,LOC FROM DEPT
+  2  WHERE DEPTNO IN (SELECT DEPTNO
+  3                   FROM EMP
+  4                   WHERE ENAME LIKE '%A%');
+
+DNAME          LOC                                                                                  
+-------------- -------------                                                                        
+ACCOUNTING     NEW YORK                                                                             
+RESEARCH       DALLAS                                                                               
+SALES          CHICAGO                                                                              
+
+SQL> /*15] WAQTD DEPT NAME OF AN EMP WHO EARNS COMMISSION.*/
+SQL> SELECCT DNAME
+SP2-0734: unknown command beginning "SELECCT DN..." - rest of line ignored.
+SQL> SELECT DNAME FROM DEPT
+  2  WHERE DEPTNO IN (SELECT DEPTNO FROM EMP
+  3                   WHERE COMM IS NOT NULL);
+
+DNAME                                                                                               
+--------------                                                                                      
+SALES                                                                                               
+
+SQL> /*16] WAQTD LOC OF EMP IF THEY EARN COMMISSION IN DEPARTMENT
+SQL> NUMBER 40. */
+SQL> SELECT LOC
+  2  FROM DEPT
+  3  WHERE DEPTNO IN (SELECT DEPTNO FROM EMP
+  4                   WHERE COMM IS NOT NULL AND DEPTNO IN (40));
+
+no rows selected
+
+SQL> /*17] WAQTD NAME OF THE EMP EARNING MAX SAL.*/
+SQL> SELECT ENAME FROM EMP
+  2  HAVING MAX(SAL);
+HAVING MAX(SAL)
+              *
+ERROR at line 2:
+ORA-00920: invalid relational operator 
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME 
+  2  FROM EMP
+  3* WHERE SAL = (SELECT MAX(SAL) FROM EMP)
+SQL> /
+
+ENAME                                                                                               
+----------                                                                                          
+KING                                                                                                
+
+SQL> SPOOL OFF;

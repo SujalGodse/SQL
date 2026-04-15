@@ -1,0 +1,718 @@
+SQL> SET PAGES 100;
+SQL> SET LINES 100;
+SQL> --1]  WAQTD ENAME, DNAME of all the employees.
+SQL> SELECT ENAME,DNAME
+  2  FROM EMP INNER JOIN DEPT
+  3  ON EMP.DEPTNO=DEPT.DEPTNO;
+
+ENAME      DNAME                                                                                    
+---------- --------------                                                                           
+SMITH      RESEARCH                                                                                 
+ALLEN      SALES                                                                                    
+WARD       SALES                                                                                    
+JONES      RESEARCH                                                                                 
+MARTIN     SALES                                                                                    
+BLAKE      SALES                                                                                    
+CLARK      ACCOUNTING                                                                               
+SCOTT      RESEARCH                                                                                 
+KING       ACCOUNTING                                                                               
+TURNER     SALES                                                                                    
+ADAMS      RESEARCH                                                                                 
+JAMES      SALES                                                                                    
+FORD       RESEARCH                                                                                 
+MILLER     ACCOUNTING                                                                               
+
+14 rows selected.
+
+SQL> --2] WAQTD ENAME, SAL & LOC of all the employees.
+SQL> SELECT ENAME,SAL,LOC
+  2  FROM EMP INNER JOIN DEPT
+  3  ON EMP.DEPTNO=DEPT.DEPTNO;
+
+ENAME             SAL LOC                                                                           
+---------- ---------- -------------                                                                 
+SMITH             800 DALLAS                                                                        
+ALLEN            1600 CHICAGO                                                                       
+WARD             1250 CHICAGO                                                                       
+JONES            2975 DALLAS                                                                        
+MARTIN           1250 CHICAGO                                                                       
+BLAKE            2850 CHICAGO                                                                       
+CLARK            2450 NEW YORK                                                                      
+SCOTT            3000 DALLAS                                                                        
+KING             5000 NEW YORK                                                                      
+TURNER           1500 CHICAGO                                                                       
+ADAMS            1100 DALLAS                                                                        
+JAMES             950 CHICAGO                                                                       
+FORD             3000 DALLAS                                                                        
+MILLER           1300 NEW YORK                                                                      
+
+14 rows selected.
+
+SQL> --3] WAQTD ENAME, DEPTNO & DNAME of all the employees.
+SQL> SELECT ENAME,D.DEPTNO,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO;
+
+ENAME          DEPTNO DNAME                                                                         
+---------- ---------- --------------                                                                
+SMITH              20 RESEARCH                                                                      
+ALLEN              30 SALES                                                                         
+WARD               30 SALES                                                                         
+JONES              20 RESEARCH                                                                      
+MARTIN             30 SALES                                                                         
+BLAKE              30 SALES                                                                         
+CLARK              10 ACCOUNTING                                                                    
+SCOTT              20 RESEARCH                                                                      
+KING               10 ACCOUNTING                                                                    
+TURNER             30 SALES                                                                         
+ADAMS              20 RESEARCH                                                                      
+JAMES              30 SALES                                                                         
+FORD               20 RESEARCH                                                                      
+MILLER             10 ACCOUNTING                                                                    
+
+14 rows selected.
+
+SQL> /*4] WAQTD ENAME, DEPTNO & DNAME of employees working in
+SQL> DEPTNO 20. */
+SQL> SELECT ENAME,D.DEPTNO,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE E.DEPTNO=20;
+
+ENAME          DEPTNO DNAME                                                                         
+---------- ---------- --------------                                                                
+SMITH              20 RESEARCH                                                                      
+JONES              20 RESEARCH                                                                      
+SCOTT              20 RESEARCH                                                                      
+ADAMS              20 RESEARCH                                                                      
+FORD               20 RESEARCH                                                                      
+
+SQL> /*5] WAQTD ENAME, DNAME of employees who are earning less than
+SQL> Rs.2000. */
+SQL> SELECT ENAME,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE SAL<2000;
+
+ENAME      DNAME                                                                                    
+---------- --------------                                                                           
+SMITH      RESEARCH                                                                                 
+ALLEN      SALES                                                                                    
+WARD       SALES                                                                                    
+MARTIN     SALES                                                                                    
+TURNER     SALES                                                                                    
+ADAMS      RESEARCH                                                                                 
+JAMES      SALES                                                                                    
+MILLER     ACCOUNTING                                                                               
+
+8 rows selected.
+
+SQL> /*6] WAQTD ENAME, LOC of employees working in ‘DALLAS’. */
+SQL> SELECT ENAME,LOC
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE LOC='DALLAS';
+
+ENAME      LOC                                                                                      
+---------- -------------                                                                            
+SMITH      DALLAS                                                                                   
+JONES      DALLAS                                                                                   
+SCOTT      DALLAS                                                                                   
+ADAMS      DALLAS                                                                                   
+FORD       DALLAS                                                                                   
+
+SQL> /*7] WAQTD ENAME, SAL & DNAME of employees whose name starts with
+SQL> character ‘A’ & DNAME ends with character ‘S’. */
+SQL> SELECT ENAME,SAL,D.DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE ENAME LIKE 'A%' AND DNAME LIKE '%S';
+
+ENAME             SAL DNAME                                                                         
+---------- ---------- --------------                                                                
+ALLEN            1600 SALES                                                                         
+
+SQL> /*8] WAQTD ENAME, SAL, DNAME of all the employees who are earning
+SQL> more than ‘SCOTT’ in ‘ACCOUNTING’ department. */
+SQL> SELECT ENAME,SAL,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE SAL>(SELECT SAL FROM EMP
+  5             WHERE ENAME='SCOTT') AND
+  6        DNAME='ACCOUNTING';
+
+ENAME             SAL DNAME                                                                         
+---------- ---------- --------------                                                                
+KING             5000 ACCOUNTING                                                                    
+
+SQL> /*9] WAQTD number of employees hired before ‘ALLEN’ in ‘RESEARCH’
+SQL> department using joins.*/
+SQL> SELECT  COUNT(*)
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE HIREDATE < (SELECT HIREDATE FROM EMP WHERE ENAME='ALLEN')
+  5        AND DNAME='RESEARCH';
+
+  COUNT(*)                                                                                          
+----------                                                                                          
+         1                                                                                          
+
+SQL> /*10] WAQTD maximum SAL given to the employees working in same
+SQL> designation as that of ‘BLAKE’ in ‘DALLAS’.*/
+SQL> SELECT MAX(SAL)
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE JOB IN (SELECT JOB FROM EMP WHERE ENAME='BLAKE')
+  5        AND LOC='DALLAS';
+
+  MAX(SAL)                                                                                          
+----------                                                                                          
+      2975                                                                                          
+
+SQL> /*11] WAQTD ENAME, HIREDATE & DNAME of employees hired in the
+SQL> month of ‘FEB’ & his DNAME must have second character as ‘A’. */
+SQL> SELECT ENAME,HIREDATE,DNAME
+  2  FROM EMP E INNER JOIN DPET D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE HIREDATE LIKE '%FEB%' AND
+  5        DNAME LIKE '_A%';
+FROM EMP E INNER JOIN DPET D
+                      *
+ERROR at line 2:
+ORA-00942: table or view does not exist 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,HIREDATE,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE HIREDATE LIKE '%FEB%' AND
+  5*       DNAME LIKE '_A%'
+SQL> /
+
+ENAME      HIREDATE  DNAME                                                                          
+---------- --------- --------------                                                                 
+ALLEN      20-FEB-81 SALES                                                                          
+WARD       22-FEB-81 SALES                                                                          
+
+SQL> /*12] WAQTD ENAME earning more than ‘MILLER’ in ‘NEW YORK’ usingboth Sub-query & joins.
+SQL> */
+SQL> SELECT ENAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  WHERE E.DEPTNO=D.DEPTNO
+  4  AND SAL>(SELECT SAL FROM EMP WHERE ENAME='MILLER') AND
+  5  LOC ='NEW YORK';
+WHERE E.DEPTNO=D.DEPTNO
+*
+ERROR at line 3:
+ORA-00905: missing keyword 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE SAL>(SELECT SAL FROM EMP WHERE ENAME='MILLER') AND
+  5* LOC ='NEW YORK'
+SQL> /
+
+ENAME                                                                                               
+----------                                                                                          
+CLARK                                                                                               
+KING                                                                                                
+
+SQL> /*13] WAQTD ENAME & DNAME of employee who is having exactly 4
+SQL> characters in his name & his DNAME should have 2 consecutive 'CC'.*/
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE ENAME LIKE '____' AND DNAME LIKE '%CC%'
+SQL> /
+
+ENAME      DNAME                                                                                    
+---------- --------------                                                                           
+KING       ACCOUNTING                                                                               
+
+SQL> /*14] WAQTD DNAME, ENAME & LOC of employees hired before 1981 in
+SQL> ‘DALLAS’. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,DNAME,LOC
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE HIREDATE<'01-JAN-81' AND LOC='DALLAS'
+SQL> /
+
+ENAME      DNAME          LOC                                                                       
+---------- -------------- -------------                                                             
+SMITH      RESEARCH       DALLAS                                                                    
+
+SQL> /*15] WAQTD ENAME, JOB, LOC of employees working in same
+SQL> designation as that of ‘JONES’ in ‘CHICAGO’. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,JOB,LOC
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE JOB IN (SELECT JOB FROM EMP WHERE ENAME='JONES') AND 
+  5* LOC='CHICAGO'
+SQL> /
+
+ENAME      JOB       LOC                                                                            
+---------- --------- -------------                                                                  
+BLAKE      MANAGER   CHICAGO                                                                        
+
+SQL> /*16] WAQTD ENAME, LOC of employees who is searching same SAL as
+SQL> that of ‘SCOTT‘ in ‘DALLAS’ & he was hired in the month of ‘DEC’.*/
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,LOC
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE SAL IN (SELECT SAL FROM EMP WHERE ENAME='SCOTT') AND 
+  5  LOC='DALLAS' AND 
+  6* HIREDATE LIKE '%DEC%'
+SQL> /
+
+ENAME      LOC                                                                                      
+---------- -------------                                                                            
+FORD       DALLAS                                                                                   
+
+SQL> /*17] WAQTD ENAME, DNAME of employees whose designation ends with
+SQL> string ‘MAN’ & his name must have 2 consecutive ‘LL’.*/
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE JOB LIKE '%MAN' AND ENAME LIKE '%LL%'
+SQL> /
+
+ENAME      DNAME                                                                                    
+---------- --------------                                                                           
+ALLEN      SALES                                                                                    
+
+SQL> /*18] WAQTD ENAME, DEPTNO & DNAME of employees working in same
+SQL> designation as that of ‘SMITH’ in ‘NEW YORK’.*/
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,D.DEPTNO,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE JOB IN (SELECT JON FROM EMP WHERE ENAME='SMITH') AND 
+  5* LOC='NEW YORK'
+SQL> /
+WHERE JOB IN (SELECT JON FROM EMP WHERE ENAME='SMITH') AND 
+                     *
+ERROR at line 4:
+ORA-00904: "JON": invalid identifier 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,D.DEPTNO,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE JOB IN (SELECT JOB FROM EMP WHERE ENAME='SMITH') AND 
+  5* LOC='NEW YORK'
+SQL> /
+
+ENAME          DEPTNO DNAME                                                                         
+---------- ---------- --------------                                                                
+MILLER             10 ACCOUNTING                                                                    
+
+SQL> /*19] WAQTD ENAME & DNAME of employees hired after 1980 into
+SQL> ‘RESEARCH’ department & working as an ‘ANALYST’.*/
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE HIREDATE>'31-DECC-80' AND DNAME='RESEARCH' AND JOB='ANALYST'
+SQL> /
+WHERE HIREDATE>'31-DECC-80' AND DNAME='RESEARCH' AND JOB='ANALYST'
+               *
+ERROR at line 4:
+ORA-01841: (full) year must be between -4713 and +9999, and not be 0 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE HIREDATE>'31-DEC-80' AND DNAME='RESEARCH' AND JOB='ANALYST'
+SQL> /
+
+ENAME      DNAME                                                                                    
+---------- --------------                                                                           
+SCOTT      RESEARCH                                                                                 
+FORD       RESEARCH                                                                                 
+
+SQL> /*20] WAQTD ENAME, SAL, LOC of employees whose SAL ends with 50 in
+SQL> ‘CHICAGO’ & his name must start with ‘M’ & ends with ‘N’. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,SAL,LOC
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE SAL LIKE '%50' AND LOC='CHICAGO' AND ENAME LIKE 'M%N'
+SQL> /
+
+ENAME             SAL LOC                                                                           
+---------- ---------- -------------                                                                 
+MARTIN           1250 CHICAGO                                                                       
+
+SQL> /*21] WAQTD ENAME, DNAME of employees earning less than ‘JAMES’ &
+SQL> must be hired in the year 1980 in ‘DALLAS’.*/
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE SAL<(SELECT SAL FROM EMP WHERE ENAME='JAMES') AND 
+  5* HIREDATE LIKE '%80' AND LOC='DALLAS'
+SQL> /
+
+ENAME      DNAME                                                                                    
+---------- --------------                                                                           
+SMITH      RESEARCH                                                                                 
+
+SQL> /*22] WAQTD ENAME & DEPTNO & DNAME of employees working as
+SQL> ‘SALESMAN’ or ‘MANAGER’ in DEPTNO 20 or 30 & he must be earning
+SQL> more than ‘WARD’ in ‘SALES’ or ‘RESEARCH’ department & he must get
+SQL> commission.*/
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,D.DEPTNO,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE JOB IN ('SALESMAN','MANAGER') AND E.DEPTNO IN (20,30) AND 
+  5  SAL>(SELECT SAL FROM EMP WHERE ENAME='WARD') AND 
+  6* DNAME IN ('SALES','RESEARCH') AND COMM NOT NULL
+SQL> /
+DNAME IN ('SALES','RESEARCH') AND COMM NOT NULL
+                                           *
+ERROR at line 6:
+ORA-00920: invalid relational operator 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,D.DEPTNO,DNAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4  WHERE JOB IN ('SALESMAN','MANAGER') AND E.DEPTNO IN (20,30) AND 
+  5  SAL>(SELECT SAL FROM EMP WHERE ENAME='WARD') AND 
+  6* DNAME IN ('SALES','RESEARCH') AND COMM IS NOT NULL
+SQL> /
+
+ENAME          DEPTNO DNAME                                                                         
+---------- ---------- --------------                                                                
+ALLEN              30 SALES                                                                         
+TURNER             30 SALES                                                                         
+
+SQL> /*23] WAQTD ENAME of the employees & their LOC of all the employees. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT ENAME,LOC
+  2  FROM EMP E INNER JOIN DEPT D
+  3* ON E.DEPTNO=D.DEPTNO
+SQL> /
+
+ENAME      LOC                                                                                      
+---------- -------------                                                                            
+SMITH      DALLAS                                                                                   
+ALLEN      CHICAGO                                                                                  
+WARD       CHICAGO                                                                                  
+JONES      DALLAS                                                                                   
+MARTIN     CHICAGO                                                                                  
+BLAKE      CHICAGO                                                                                  
+CLARK      NEW YORK                                                                                 
+SCOTT      DALLAS                                                                                   
+KING       NEW YORK                                                                                 
+TURNER     CHICAGO                                                                                  
+ADAMS      DALLAS                                                                                   
+JAMES      CHICAGO                                                                                  
+FORD       DALLAS                                                                                   
+MILLER     NEW YORK                                                                                 
+
+14 rows selected.
+
+SQL> /*24] WAQTD DNAME & SAL for all the employee working in
+SQL> ‘ACCOUNTING‘ department. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,SAL
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE DNAME='ACCOUNTING'
+SQL> /
+
+DNAME                 SAL                                                                           
+-------------- ----------                                                                           
+ACCOUNTING           2450                                                                           
+ACCOUNTING           5000                                                                           
+ACCOUNTING           1300                                                                           
+
+SQL> /*25] WAQTD DNAME & ANNUALSAL for all employees whose SAL is
+SQL> more than Rs.2340. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,SAL*12 ANNUAL_SAL
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE SAL>2340
+SQL> /
+
+DNAME          ANNUAL_SAL                                                                           
+-------------- ----------                                                                           
+RESEARCH            35700                                                                           
+SALES               34200                                                                           
+ACCOUNTING          29400                                                                           
+RESEARCH            36000                                                                           
+ACCOUNTING          60000                                                                           
+RESEARCH            36000                                                                           
+
+6 rows selected.
+
+SQL> /*26] WAQTD ENAME & DNAME for employees having character ‘A’ in
+SQL> their DNAME. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE DNAME LIKE '%A%'
+SQL> /
+
+DNAME          ENAME                                                                                
+-------------- ----------                                                                           
+RESEARCH       SMITH                                                                                
+SALES          ALLEN                                                                                
+SALES          WARD                                                                                 
+RESEARCH       JONES                                                                                
+SALES          MARTIN                                                                               
+SALES          BLAKE                                                                                
+ACCOUNTING     CLARK                                                                                
+RESEARCH       SCOTT                                                                                
+ACCOUNTING     KING                                                                                 
+SALES          TURNER                                                                               
+RESEARCH       ADAMS                                                                                
+SALES          JAMES                                                                                
+RESEARCH       FORD                                                                                 
+ACCOUNTING     MILLER                                                                               
+
+14 rows selected.
+
+SQL> /*27] WAQTD ENAME & DNAME for all the employees working as
+SQL> ‘SALESMAN’. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE JOB='SALESMAN'
+SQL> /
+
+DNAME          ENAME                                                                                
+-------------- ----------                                                                           
+SALES          ALLEN                                                                                
+SALES          WARD                                                                                 
+SALES          MARTIN                                                                               
+SALES          TURNER                                                                               
+
+SQL> /*28] WAQTD ENNAME, DNAME & JOB for all the employees whose JOB
+SQL> & DNAME starts with character ‘S’.*/
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME,JOB
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE JOB LIKE 'S%' AND DNAME LIKE 'S%'
+SQL> /
+
+DNAME          ENAME      JOB                                                                       
+-------------- ---------- ---------                                                                 
+SALES          ALLEN      SALESMAN                                                                  
+SALES          WARD       SALESMAN                                                                  
+SALES          MARTIN     SALESMAN                                                                  
+SALES          TURNER     SALESMAN                                                                  
+
+SQL> 29] WAQTD ENAME, DNAME & MGR for employees reporting to 7839.*/
+SP2-0734: unknown command beginning "29] WAQTD ..." - rest of line ignored.
+SQL> --29] WAQTD ENAME, DNAME & MGR for employees reporting to 7839.
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME,MGR
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE EMPNO IN (SELECT MGR FROM EMP WHERE EMPNO=7839)
+SQL> /
+
+no rows selected
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME,MGR
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE MGR IN (SELECT EMPNO FROM EMP WHERE MGR=7839)
+SQL> /
+
+DNAME          ENAME             MGR                                                                
+-------------- ---------- ----------                                                                
+SALES          ALLEN            7698                                                                
+SALES          WARD             7698                                                                
+SALES          MARTIN           7698                                                                
+RESEARCH       SCOTT            7566                                                                
+SALES          TURNER           7698                                                                
+SALES          JAMES            7698                                                                
+RESEARCH       FORD             7566                                                                
+ACCOUNTING     MILLER           7782                                                                
+
+8 rows selected.
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME,MGR
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE EMPNO IN (SELECT MGR FROM EMP WHERE MGR =7839)
+SQL> /
+
+DNAME          ENAME             MGR                                                                
+-------------- ---------- ----------                                                                
+ACCOUNTING     KING                                                                                 
+
+SQL> /30] WAQTD ENAME, DNAME & HIREDATE for employees hired after 83
+
+DNAME          ENAME             MGR                                                                
+-------------- ---------- ----------                                                                
+ACCOUNTING     KING                                                                                 
+
+SQL> into ‘ACCOUNTING’ or ‘RESEARCH’ department. */
+SP2-0734: unknown command beginning "into ‘ACCO..." - rest of line ignored.
+SQL> /*30] WAQTD ENAME, DNAME & HIREDATE for employees hired after 83
+SQL> into ‘ACCOUNTING’ or ‘RESEARCH’ department. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME,HIREDATE
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE HIREDATE>'31-DEC-83' AND DNAME IN ('ACCOUNTING','RESEARCH')
+SQL> /
+
+DNAME          ENAME      HIREDATE                                                                  
+-------------- ---------- ---------                                                                 
+RESEARCH       SCOTT      19-APR-87                                                                 
+RESEARCH       ADAMS      23-MAY-87                                                                 
+
+SQL> /*31] WAQTD ENAME, DNAME, COMMISSION & DEPTNO of the
+SQL> employees who are getting COMM in DEPTNO 10 or 30. */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME,COMM,D.DEPTNO
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE COMM IS NOT NULL AND DEPTNO IN (10,30)
+SQL> /
+WHERE COMM IS NOT NULL AND DEPTNO IN (10,30)
+                           *
+ERROR at line 4:
+ORA-00918: column ambiguously defined 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME,COMM,D.DEPTNO
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE COMM IS NOT NULL AND E.DEPTNO IN (10,30)
+SQL> /
+
+DNAME          ENAME            COMM     DEPTNO                                                     
+-------------- ---------- ---------- ----------                                                     
+SALES          ALLEN             300         30                                                     
+SALES          WARD              500         30                                                     
+SALES          MARTIN           1400         30                                                     
+SALES          TURNER              0         30                                                     
+
+SQL> /*32] WAQTD DNAME & EMPNO for all the employees whose EMPNO are
+SQL> (7839, 7902) & are working in LOC = ‘NEW YORK’.
+SQL> 
+SQL> DNAME               EMPNO -------------- ----------
+SQL> ACCOUNTING           7839 */
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,EMPNO
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE EMPNO IN (7839,7902) AND LOC='NEW YORK'
+SQL> /
+
+DNAME               EMPNO                                                                           
+-------------- ----------                                                                           
+ACCOUNTING           7839                                                                           
+
+SQL> /*33] WAQTD ENAME & DNAME who are earning more than ‘SMITH’.*/
+SQL> ED
+Wrote file afiedt.buf
+
+  1  SELECT DNAME,ENAME
+  2  FROM EMP E INNER JOIN DEPT D
+  3  ON E.DEPTNO=D.DEPTNO
+  4* WHERE SAL > (SELECT SAL FROM EMP WHERE ENAME='SMITH')
+SQL> /
+
+DNAME          ENAME                                                                                
+-------------- ----------                                                                           
+SALES          ALLEN                                                                                
+SALES          WARD                                                                                 
+RESEARCH       JONES                                                                                
+SALES          MARTIN                                                                               
+SALES          BLAKE                                                                                
+ACCOUNTING     CLARK                                                                                
+RESEARCH       SCOTT                                                                                
+ACCOUNTING     KING                                                                                 
+SALES          TURNER                                                                               
+RESEARCH       ADAMS                                                                                
+SALES          JAMES                                                                                
+RESEARCH       FORD                                                                                 
+ACCOUNTING     MILLER                                                                               
+
+13 rows selected.
+
+SQL> SPOOL OFF;

@@ -1,0 +1,189 @@
+SQL> --REPLACE
+SQL> 
+SQL> --WQTD ENAME AND REPLACE ALL THE 'A' WITH '$'
+SQL> SELECT ENAME,REPLACE(ENAME,'A','$')
+  2  FROM EMP;
+
+ENAME      REPLACE(EN                                                                               
+---------- ----------                                                                               
+SMITH      SMITH                                                                                    
+ALLEN      $LLEN                                                                                    
+WARD       W$RD                                                                                     
+JONES      JONES                                                                                    
+MARTIN     M$RTIN                                                                                   
+BLAKE      BL$KE                                                                                    
+CLARK      CL$RK                                                                                    
+SCOTT      SCOTT                                                                                    
+KING       KING                                                                                     
+TURNER     TURNER                                                                                   
+ADAMS      $D$MS                                                                                    
+JAMES      J$MES                                                                                    
+FORD       FORD                                                                                     
+MILLER     MILLER                                                                                   
+
+14 rows selected.
+
+SQL> WQTD ENAME IF THE NAME IS HAVING EXACTLY ONE A
+SP2-0734: unknown command beginning "WQTD ENAME..." - rest of line ignored.
+SQL> --WQTD ENAME IF THE NAME IS HAVING EXACTLY ONE A
+SQL> SELECT ENAME
+  2  FROM EMP
+  3  WHERE LENGTH(ENAME)-LENGTH(REPLACE(ENAME,'A'))=1;
+
+ENAME                                                                                               
+----------                                                                                          
+ALLEN                                                                                               
+WARD                                                                                                
+MARTIN                                                                                              
+BLAKE                                                                                               
+CLARK                                                                                               
+JAMES                                                                                               
+
+6 rows selected.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> --CONCAT
+SQL> 
+SQL> SELECT CONCAT('THE EMPNAME IS ',ENAME)
+  2  FROM EMP
+  3  ;
+
+CONCAT('THEEMPNAMEIS',ENA                                                                           
+-------------------------                                                                           
+THE EMPNAME IS SMITH                                                                                
+THE EMPNAME IS ALLEN                                                                                
+THE EMPNAME IS WARD                                                                                 
+THE EMPNAME IS JONES                                                                                
+THE EMPNAME IS MARTIN                                                                               
+THE EMPNAME IS BLAKE                                                                                
+THE EMPNAME IS CLARK                                                                                
+THE EMPNAME IS SCOTT                                                                                
+THE EMPNAME IS KING                                                                                 
+THE EMPNAME IS TURNER                                                                               
+THE EMPNAME IS ADAMS                                                                                
+THE EMPNAME IS JAMES                                                                                
+THE EMPNAME IS FORD                                                                                 
+THE EMPNAME IS MILLER                                                                               
+
+14 rows selected.
+
+SQL> SELECT CONCAT('THE EMPNAME IS ',CONCAT(ENAME,CONCAT(' WHO HIRED ON ',CONCAT(HIREDATE,CONCAT(' AND EARN SAL OF ',SAL)))))
+  2  FROM EMP;
+
+CONCAT('THEEMPNAMEIS',CONCAT(ENAME,CONCAT('WHOHIREDON',CONCAT(HIREDATE,CONCAT('ANDEARNSALOF',SAL))))
+----------------------------------------------------------------------------------------------------
+THE EMPNAME IS SMITH WHO HIRED ON 17-DEC-80 AND EARN SAL OF 800                                     
+THE EMPNAME IS ALLEN WHO HIRED ON 20-FEB-81 AND EARN SAL OF 1600                                    
+THE EMPNAME IS WARD WHO HIRED ON 22-FEB-81 AND EARN SAL OF 1250                                     
+THE EMPNAME IS JONES WHO HIRED ON 02-APR-81 AND EARN SAL OF 2975                                    
+THE EMPNAME IS MARTIN WHO HIRED ON 28-SEP-81 AND EARN SAL OF 1250                                   
+THE EMPNAME IS BLAKE WHO HIRED ON 01-MAY-81 AND EARN SAL OF 2850                                    
+THE EMPNAME IS CLARK WHO HIRED ON 09-JUN-81 AND EARN SAL OF 2450                                    
+THE EMPNAME IS SCOTT WHO HIRED ON 19-APR-87 AND EARN SAL OF 3000                                    
+THE EMPNAME IS KING WHO HIRED ON 17-NOV-81 AND EARN SAL OF 5000                                     
+THE EMPNAME IS TURNER WHO HIRED ON 08-SEP-81 AND EARN SAL OF 1500                                   
+THE EMPNAME IS ADAMS WHO HIRED ON 23-MAY-87 AND EARN SAL OF 1100                                    
+THE EMPNAME IS JAMES WHO HIRED ON 03-DEC-81 AND EARN SAL OF 950                                     
+THE EMPNAME IS FORD WHO HIRED ON 03-DEC-81 AND EARN SAL OF 3000                                     
+THE EMPNAME IS MILLER WHO HIRED ON 23-JAN-82 AND EARN SAL OF 1300                                   
+
+14 rows selected.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> --SUBSTR
+SQL> 
+SQL> SELECT SUBSTR(ENAME,4,2)
+  2  FROM EMP;
+
+SU                                                                                                  
+--                                                                                                  
+TH                                                                                                  
+EN                                                                                                  
+D                                                                                                   
+ES                                                                                                  
+TI                                                                                                  
+KE                                                                                                  
+RK                                                                                                  
+TT                                                                                                  
+G                                                                                                   
+NE                                                                                                  
+MS                                                                                                  
+ES                                                                                                  
+D                                                                                                   
+LE                                                                                                  
+
+14 rows selected.
+
+SQL> SELECT SUBSTR('SMITH',2)
+  2  FROM EMP;
+
+SUBS                                                                                                
+----                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+MITH                                                                                                
+
+14 rows selected.
+
+SQL> SELECT SUBSTR('MARTIN',3,2)
+  2  FROM EMP;
+
+SU                                                                                                  
+--                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+RT                                                                                                  
+
+14 rows selected.
+
+SQL> 
+SQL> --WQTD ENAME,REPLACE ALL FIRST CHAR WITH $ SIGN
+SQL> SELECT ENAME,REPLACE(ENAME,SUBSTR(ENAME,1,1),'$')
+  2  FROM EMP;
+
+ENAME      REPLACE(EN                                                                               
+---------- ----------                                                                               
+SMITH      $MITH                                                                                    
+ALLEN      $LLEN                                                                                    
+WARD       $ARD                                                                                     
+JONES      $ONES                                                                                    
+MARTIN     $ARTIN                                                                                   
+BLAKE      $LAKE                                                                                    
+CLARK      $LARK                                                                                    
+SCOTT      $COTT                                                                                    
+KING       $ING                                                                                     
+TURNER     $URNER                                                                                   
+ADAMS      $D$MS                                                                                    
+JAMES      $AMES                                                                                    
+FORD       $ORD                                                                                     
+MILLER     $ILLER                                                                                   
+
+14 rows selected.
+
+SQL> SPOOL OFF;

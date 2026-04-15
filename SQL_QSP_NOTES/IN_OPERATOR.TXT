@@ -1,0 +1,235 @@
+SQL> SET PAGES 100
+SQL> SET LINES 100
+SQL> --WAQTD NAMES OF AN EMP WHO IS WORKING IN DEPTNO 10,20
+SQL> SELECT ENAME FROM EMP WHERE DEPTNO IN(10,20);
+
+ENAME                                                                                               
+----------                                                                                          
+SMITH                                                                                               
+JONES                                                                                               
+CLARK                                                                                               
+SCOTT                                                                                               
+KING                                                                                                
+ADAMS                                                                                               
+FORD                                                                                                
+MILLER                                                                                              
+
+8 rows selected.
+
+SQL> --WAQTD SAL AND NAME OF EMP'S WHO IS NOT WORKING IN DEPTNO 10,30.
+SQL> SELECT SAL,ENAME FROM EMP WHERE DEPTNO IN(10,30);
+
+       SAL ENAME                                                                                    
+---------- ----------                                                                               
+      1600 ALLEN                                                                                    
+      1250 WARD                                                                                     
+      1250 MARTIN                                                                                   
+      2850 BLAKE                                                                                    
+      2450 CLARK                                                                                    
+      5000 KING                                                                                     
+      1500 TURNER                                                                                   
+       950 JAMES                                                                                    
+      1300 MILLER                                                                                   
+
+9 rows selected.
+
+SQL> SELECT SAL,ENAME FROM EMP WHERE DEPTNO NOT IN(10,30);
+
+       SAL ENAME                                                                                    
+---------- ----------                                                                               
+       800 SMITH                                                                                    
+      2975 JONES                                                                                    
+      3000 SCOTT                                                                                    
+      1100 ADAMS                                                                                    
+      3000 FORD                                                                                     
+
+SQL> --WAQTD NAME & HIREDATE OF EMP'S WHOSE DESIGNATION IS CLERK,SALESMAN,MANAGER.
+SQL> SELECT ENAME,HIREDATE FROM EMP WHERE JOB IN('CLERK','SALESMAN','MANAGER');
+
+ENAME      HIREDATE                                                                                 
+---------- ---------                                                                                
+SMITH      17-DEC-80                                                                                
+ALLEN      20-FEB-81                                                                                
+WARD       22-FEB-81                                                                                
+JONES      02-APR-81                                                                                
+MARTIN     28-SEP-81                                                                                
+BLAKE      01-MAY-81                                                                                
+CLARK      09-JUN-81                                                                                
+TURNER     08-SEP-81                                                                                
+ADAMS      23-MAY-87                                                                                
+JAMES      03-DEC-81                                                                                
+MILLER     23-JAN-82                                                                                
+
+11 rows selected.
+
+SQL> -- WAQTD NAME & MANAGER NUMBER OF EMP'S EXCEPT FORD,MILLER,KING,JONES
+SQL> SELECT ENAME,MGR WHERE ENAME NOT IN('FORD','MILLER','KING','JONES');
+SELECT ENAME,MGR WHERE ENAME NOT IN('FORD','MILLER','KING','JONES')
+                 *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1* SELECT ENAME,MGR FROM EMP WHERE ENAME NOT IN('FORD','MILLER','KING','JONES')
+SQL> /
+
+ENAME             MGR                                                                               
+---------- ----------                                                                               
+SMITH            7902                                                                               
+ALLEN            7698                                                                               
+WARD             7698                                                                               
+MARTIN           7698                                                                               
+BLAKE            7839                                                                               
+CLARK            7839                                                                               
+SCOTT            7566                                                                               
+TURNER           7698                                                                               
+ADAMS            7788                                                                               
+JAMES            7698                                                                               
+
+10 rows selected.
+
+SQL> --WAQTD DETAILS OF AN EMP WHO IS EARNING 800,3000,2950
+SQL> SELECT *FROM EMP WHERE SAL IN(800,3000,2950);
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+
+SQL> --WAQTD DETAILS OF AN EMP ALONG WITH ANNUAL SALARY IF EMP IS EARNING COMMISSION 300,1400,500.
+SQL> 
+SQL> SELECT SAL*12 AS'ANNUAL_SAL' FROM EMP WHERE COMM IN(300,1400,500);
+SELECT SAL*12 AS'ANNUAL_SAL' FROM EMP WHERE COMM IN(300,1400,500)
+                *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1* SELECT*FROM EMP WHERE SAL*12 AS'ANNUAL_SAL'  COMM IN(300,1400,500)
+SQL> /
+SELECT*FROM EMP WHERE SAL*12 AS'ANNUAL_SAL'  COMM IN(300,1400,500)
+                             *
+ERROR at line 1:
+ORA-00920: invalid relational operator 
+
+
+SQL> SELECT *,SAL*12 FROM EMP WHERE COMM IN(300,1400,500);
+SELECT *,SAL*12 FROM EMP WHERE COMM IN(300,1400,500)
+        *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> SELECT *,SAL*12 AS 'ANNUALSAL' FROM EMP WHERE COMM IN(300,1400,500);
+SELECT *,SAL*12 AS 'ANNUALSAL' FROM EMP WHERE COMM IN(300,1400,500)
+        *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> SELECT EMP.*,SAL*12 AS 'ANNUALSAL' FROM EMP WHERE COMM IN(300,1400,500);
+SELECT EMP.*,SAL*12 AS 'ANNUALSAL' FROM EMP WHERE COMM IN(300,1400,500)
+                       *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> SELECT EMP.*,SAL*12 FROM EMP WHERE COMM IN(300,1400,500);
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO     SAL*12    
+---------- ---------- --------- ---------- --------- ---------- ---------- ---------- ----------    
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30      19200    
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30      15000    
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30      15000    
+
+SQL> --WAQTD NAME , SAL,ANNUAL SAL IF EMP IS NOT WORKING AS SALESMAN OR MANAGER IN DEPTNO 30.
+SQL> SELECT ENAME,SAL,SAL*12 AS 'ANNUALSAL' FROM EMP WHERE JOB NOT IN('SALESAMN','MANAGER') AND DEPTNO IN(30);
+SELECT ENAME,SAL,SAL*12 AS 'ANNUALSAL' FROM EMP WHERE JOB NOT IN('SALESAMN','MANAGER') AND DEPTNO IN(30)
+                           *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1* SELECT ENAME,SAL,SAL*12  FROM EMP WHERE JOB NOT IN('SALESAMN','MANAGER') AND DEPTNO IN(30)
+SQL> ED
+Wrote file afiedt.buf
+
+  1* SELECT ENAME,SAL,SAL*12  FROM EMP WHERE JOB NOT IN('SALESAMN','MANAGER') AND DEPTNO IN(30)
+SQL> /
+
+ENAME             SAL     SAL*12                                                                    
+---------- ---------- ----------                                                                    
+ALLEN            1600      19200                                                                    
+WARD             1250      15000                                                                    
+MARTIN           1250      15000                                                                    
+TURNER           1500      18000                                                                    
+JAMES             950      11400                                                                    
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1* SELECT ENAME,SAL,SAL*12 FROM EMP WHERE JOB NOT IN('SALESAMN','MANAGER') OR DEPTNO IN(30)
+SQL> /
+
+ENAME             SAL     SAL*12                                                                    
+---------- ---------- ----------                                                                    
+SMITH             800       9600                                                                    
+ALLEN            1600      19200                                                                    
+WARD             1250      15000                                                                    
+MARTIN           1250      15000                                                                    
+BLAKE            2850      34200                                                                    
+SCOTT            3000      36000                                                                    
+KING             5000      60000                                                                    
+TURNER           1500      18000                                                                    
+ADAMS            1100      13200                                                                    
+JAMES             950      11400                                                                    
+FORD             3000      36000                                                                    
+MILLER           1300      15600                                                                    
+
+12 rows selected.
+
+SQL> SELECT ENAME,SAL,SAL*12 FROM EMP WHERE JOB NOT IN('SALESMAN','MANAGER') AND DEPTNO IN(30);
+
+ENAME             SAL     SAL*12                                                                    
+---------- ---------- ----------                                                                    
+JAMES             950      11400                                                                    
+
+SQL> --] WAQTD NAME & COMMISSION OF EMP'S WHO IS HIRED ON 3/12/81 OR 28/9/81.
+SQL> SELECT ENAME,COMM FROM EMP WHERE HIREDATE IN('3-DEC-81','28-SEP-81');
+
+ENAME            COMM                                                                               
+---------- ----------                                                                               
+MARTIN           1400                                                                               
+JAMES                                                                                               
+FORD                                                                                                
+
+SQL> --WAQTD DETAILS OF AN EMP WORKING AS A MANAGER OR ANALYST EXCEPT DEPTNO 30.
+SQL> SELECT * FROM EMP WHERE JOB IN('MANAGER','ANALYST') AND DEPTNO NOT IN(30);
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+
+SQL> --WAQTF DETAILS OF AN EMP WHOSE MANAGER NUMBER IS 7902 OR 7566
+SQL> SELECT*FROM EMP WHERE MGR IN(7902,7566);
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+
+SQL> SPOOL OFF;

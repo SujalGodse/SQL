@@ -1,0 +1,339 @@
+SQL> 
+SQL> 
+SQL> --TARGET TABLE
+SQL> 
+SQL> CREATE TABLE EMPDUP AS (SELECT * FROM EMP);
+
+Table created.
+
+SQL> SELECT * FROM EMPDUP;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10               
+
+14 rows selected.
+
+SQL> --WQT UPDATE SAL, 5000 BONUS IF THEY ARE WORKING IN NEW YORK
+SQL> 
+SQL> UPDATE EMPDUP
+  2  SET SAL=SAL+5000
+  3  WHERE DEPTNO IN (SELECT DEPTNO
+  4                   FROM DEPT
+  5                   WHERE LOC='NEW YORK');
+
+3 rows updated.
+
+SQL> SELECT * FROM EMPDUP;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7782 CLARK      MANAGER         7839 09-JUN-81       7450                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7839 KING       PRESIDENT            17-NOV-81      10000                    10               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+      7934 MILLER     CLERK           7782 23-JAN-82       6300                    10               
+
+14 rows selected.
+
+SQL> 
+SQL> 
+SQL> --WQTU INCREMENT 50% HIKE IN SAL FOR TOP 3 EMPS
+SQL> 
+
+  1  UPDATE EMPDUP
+  2  SET SAL=SAL*1.50
+  3  WHERE ENAME IN (SELECT ENAME FROM (SELECT ENAME,ROWNUM R1
+  4                                     FROM EMP
+  5  				   ORDER BY SAL DESC)
+  6* 		WHERE R1<=3)
+SQL> /
+
+3 rows updated.
+
+SQL> SELECT * FROM EMPDUP;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80       1200                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       2400        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1875        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7782 CLARK      MANAGER         7839 09-JUN-81       7450                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7839 KING       PRESIDENT            17-NOV-81      10000                    10               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+      7934 MILLER     CLERK           7782 23-JAN-82       6300                    10               
+
+14 rows selected.
+
+SQL> ED
+Wrote file afiedt.buf
+
+  1* SELECT * FROM EMPDUP
+SQL> UPDATE EMPDUP
+  2  SET SAL=SAL*1.50
+  3  WHERE SAL IN (SELECT SAL FROM (SELECT ROWNUM R1,SAL
+  4                                 FROM (SELECT DISTINCT(SAL)
+  5                                       FROM EMPDUP
+  6                                       ORDER BY SAL DESC))
+  7                WHERE R1<=3);
+
+3 rows updated.
+
+SQL> SELECT * FROM EMPDUP;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80       1200                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       2400        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1875        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7782 CLARK      MANAGER         7839 09-JUN-81      11175                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7839 KING       PRESIDENT            17-NOV-81      15000                    10               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+      7934 MILLER     CLERK           7782 23-JAN-82       9450                    10               
+
+14 rows selected.
+
+SQL> 
+SQL> 
+SQL> --DELETE COMMAND
+SQL> -- DELETE FROM <TABLE_NAME> WHERE <CONDITION>;
+SQL> 
+SQL> --WQT DELETE IF THE EMP IS BELONG TO DEPTNO 10
+SQL> 
+SQL> DELETE FROM EMPDUP
+  2  WHERE DEPTNO=10;
+
+3 rows deleted.
+
+SQL> SELECT * FROM EMPDUP;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80       1200                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       2400        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1875        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+
+11 rows selected.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> WQT DELETE ALL DETAILS OF EMP IF THE EMP ARE WORKING IN NEW YORK
+SP2-0734: unknown command beginning "WQT DELETE..." - rest of line ignored.
+SQL> 
+SQL> DELETE FROM EMPDUP
+  2  WHERE DEPTNO IN (SELECT DEPTNO
+  3                   FROM DEPT
+  4                   WHERE LOC='NEW YORK');
+
+0 rows deleted.
+
+SQL> 
+SQL> 
+SQL> --WQT DELETE WORST 3 EMPS
+SQL> --WQT DELETE ALL THE DETAILS OF EMPS IF THE EMPS ARE REPORTING TO MARTIN
+SQL> 
+SQL> DELETE FROM EMPDUP
+  2  WHERE MGR IN (SELECT EMPNO
+  3                FROM EMPDUP
+  4                WHERE ENAME='MARTIN');
+
+0 rows deleted.
+
+SQL> 
+SQL> 
+SQL> --TCL(TRANSACTION CONTROL LANG)
+SQL> --COMMIT :- USED TO SAVE THE TRANSACTION LIKE INSERT,UPDATE,DELETE
+SQL> --SYNTAX :- --COMMIT;
+SQL> 
+SQL> --ROLLBACK :- TO RECOVER updated,DELETED DATA BEFORE COMMIT
+SQL> --SYNTAX :- ROLLBACK;
+SQL> 
+SQL> ROLLBACK;
+
+Rollback complete.
+
+SQL> SELECT * FROM EMPDUP;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10               
+
+14 rows selected.
+
+SQL> 
+SQL> --SAVEPOINT
+SQL> 
+SQL> SAVEPOINT S1;
+
+Savepoint created.
+
+SQL> UPDATE EMPDUP SET SAL=SAL+1000 WHERE DEPTNO=10;
+
+3 rows updated.
+
+SQL> SAVEPOINT S2;
+
+Savepoint created.
+
+SQL> DELETE FROM EMPDUP WHERE ENAME='MILLER';
+
+1 row deleted.
+
+SQL> SAVEPOINT S3;
+
+Savepoint created.
+
+SQL> UPDATE EMPDUP SET SAL=SAL-500 WHERE COMM IS NOT NULL;
+
+4 rows updated.
+
+SQL> 
+SQL> SELECT * FROM EMPDUP;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1100        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81        750        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81        750       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7782 CLARK      MANAGER         7839 09-JUN-81       3450                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7839 KING       PRESIDENT            17-NOV-81       6000                    10               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1000          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+
+13 rows selected.
+
+SQL> ROLLBACK TO S3;
+
+Rollback complete.
+
+SQL> SELECT * FROM EMPDUP;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7782 CLARK      MANAGER         7839 09-JUN-81       3450                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7839 KING       PRESIDENT            17-NOV-81       6000                    10               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+
+13 rows selected.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> --DROPPING TABLE
+SQL> 
+SQL> DROP TABLE EMPDUP;
+
+Table dropped.
+
+SQL> SELECT * FROM TAB;
+
+TNAME                          TABTYPE  CLUSTERID                                                   
+------------------------------ ------- ----------                                                   
+DEPT                           TABLE                                                                
+EMP                            TABLE                                                                
+BONUS                          TABLE                                                                
+SALGRADE                       TABLE                                                                
+BIN$upjtoRw7Ro6KZyIUSC7J2g==$0 TABLE                                                                
+
+SQL> -- DROPED TABLE IS SAVED IN BIN, IT CAN BE RECOVERED USING FLASHBACK
+SQL> FLASHBACK TABLE EMPDUP TO BEFORE DROP;
+
+Flashback complete.
+
+SQL> SELECT * FROM EMPDUP;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO               
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------               
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20               
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30               
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30               
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20               
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30               
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30               
+      7782 CLARK      MANAGER         7839 09-JUN-81       3450                    10               
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20               
+      7839 KING       PRESIDENT            17-NOV-81       6000                    10               
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30               
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20               
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30               
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20               
+
+13 rows selected.
+
+SQL> 
+SQL> 
+SQL> SPOOL OFF;

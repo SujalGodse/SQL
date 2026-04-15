@@ -1,0 +1,56 @@
+Microsoft Windows [Version 10.0.22631.5126]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\sujal>cd C:\Program Files\MySQL\MySQL Server 8.0\bin
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>show databases;
+'show' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 21
+Server version: 8.0.42 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| studentsdb         |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> use studentsdb;
+Database changed
+mysql> show tables;
++----------------------+
+| Tables_in_studentsdb |
++----------------------+
+| students             |
++----------------------+
+1 row in set (0.01 sec)
+
+mysql> select * from students;
++------+----------+
+| sid  | name     |
++------+----------+
+|    2 | Raju     |
+|    3 | Indumati |
+|    4 | Kaalia   |
+|    5 | Jaggu    |
+|    6 | Dholu    |
++------+----------+
+5 rows in set (0.00 sec)
